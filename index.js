@@ -3,26 +3,35 @@
 import { tweetsData } from './data.js';
 import { v4 as uuidv4 } from 'https://jspm.dev/uuid';
 
+let myTweets = [];
 const TweetsFromLocalStorage = JSON.parse(localStorage.getItem("myTweets"));
 
 if (TweetsFromLocalStorage){
     myTweets = TweetsFromLocalStorage;
+} else {
+    for (let i=0;i<tweetsData.length;i++){
+        myTweets.push(tweetsData[i]);
+    }
 }
-
 
 window.addEventListener('load', function(){
     render();
 });
 
+console.log(myTweets);
+
 document.addEventListener('click', function(e){
     if(e.target.id === 'tweet-btn'){
         handleTweetBtnClick();
+        updateLocalStorage();
     }
     else if(e.target.dataset.like){
         handleLikeClick(e.target.dataset.like);
+        updateLocalStorage();
     }
     else if(e.target.dataset.retweet){
         handleRetweetClick(e.target.dataset.retweet);
+        updateLocalStorage();
     }
     else if(e.target.dataset.reply){
         handleReplyClick(e.target.dataset.reply);
@@ -32,14 +41,37 @@ document.addEventListener('click', function(e){
     }
     else if (e.target.dataset.answer){
         handleAnswerBtnClick(e.target.dataset.answer);
+        updateLocalStorage();
+    }
+    else if (e.target.dataset.trash){
+        handleDeleteBtnClick(e.target.dataset.trash);
+        updateLocalStorage();
     }
     
 });
 
+function updateLocalStorage(){
+    localStorage.clear();
+    localStorage.setItem("myTweets", JSON.stringify(myTweets));
+}
+
+function addToLocalStorage(tweet){
+    myTweets.unshift(tweet);
+    tweetsData.unshift(tweet);
+    localStorage.setItem("myTweets", JSON.stringify(myTweets));
+}
+
+function handleDeleteBtnClick(tweetId){
+    const targetTweetObj = myTweets.filter(function(tweet){
+        return tweet.uuid === tweetId;
+    })[0];
+
+    
+}
+
 function handleTweetBtnClick(){
     const tweetInput = document.getElementById('tweet-input');
     if(tweetInput.value){
-        let tweetsArray = [];
         const tweetObject = 
         {
             handle: `@Scrimba`,
@@ -50,16 +82,17 @@ function handleTweetBtnClick(){
             replies: [],
             isLiked: false,
             isRetweeted: false,
+            ownTweet: true,
             uuid: uuidv4()
         };
-        tweetsData.unshift(tweetObject);
+        addToLocalStorage(tweetObject);
     render();
     tweetInput.value = '';
     }
 }
 
 function handleLikeClick(tweetId){ 
-    const targetTweetObj = tweetsData.filter(function(tweet){
+    const targetTweetObj = myTweets.filter(function(tweet){
         return tweet.uuid === tweetId;
     })[0];
 
@@ -74,7 +107,7 @@ function handleLikeClick(tweetId){
 }
 
 function handleRetweetClick(tweetId){
-    const targetTweetObj = tweetsData.filter(function(tweet){
+    const targetTweetObj = myTweets.filter(function(tweet){
         return tweet.uuid === tweetId;
     })[0];
     
@@ -101,7 +134,7 @@ function handleAnswerBtnClick(answerId){
     const commentInput = document.getElementById(`reply-textarea-${answerId}`);
     
     if(commentInput.value){
-        const targetTweetObj = tweetsData.filter(function(tweet){
+        const targetTweetObj = myTweets.filter(function(tweet){
             const tweetId = tweet.uuid.includes(answerId);
             if (tweetId){
                 return tweetId;
@@ -120,9 +153,13 @@ function handleAnswerBtnClick(answerId){
 
 function getFeedHtml(){
     let feedHtml = ``;
-    
-    tweetsData.forEach(function(tweet){
+    myTweets.forEach(function(tweet){
         
+        let trashIconClass = 'style="display:none"';
+        if (tweet.ownTweet){
+            trashIconClass = '';
+        }
+
         let likeIconClass = '';
         
         if (tweet.isLiked){
@@ -198,6 +235,10 @@ function getFeedHtml(){
                     ></i>
                     ${tweet.retweets}
                 </span>
+                <span class="tweet-detail">
+                    <i class="fa-solid fa-trash" ${trashIconClass}
+                    data-trash="${tweet.uuid}"
+                    ></i>
             </div>   
         </div>            
     </div>
