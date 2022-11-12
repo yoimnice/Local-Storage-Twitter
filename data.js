@@ -1,5 +1,16 @@
 /*jshint esversion: 6 */
-export const tweetsData = [   
+export const tweetsData = [
+    {
+        handle: `me`,
+        profilePic: `images/memoji-happy.jpg`,
+        likes: 52,
+        retweets: 2,
+        tweetText: `Hi! I hosted my personal website. U can check it here 👉 <a href="https://aliashchuk-dev.tech/#1">aliashchuk-dev.tech</a> `,
+        replies: [],
+        isLiked: false,
+        isRetweeted: false,
+        uuid: '42341eee-c2f5-4446-9c2a-8562934223ee',
+    },   
     {
         handle: `TrollBot66756542 💎`,
         profilePic: `images/troll.jpg`,
@@ -34,7 +45,7 @@ export const tweetsData = [
         isRetweeted: false,
         uuid: '3c23454ee-c0f5-9g9g-9c4b-77835tgs2',
     },
-        {
+    {
         handle: `NoobCoder12`,
         profilePic: `images/flower.png`,
         likes: 10,

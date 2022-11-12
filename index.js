@@ -14,16 +14,19 @@ if (TweetsFromLocalStorage){
     }
 }
 
+console.log(myTweets);
+
 window.addEventListener('load', function(){
     render();
 });
-
-console.log(myTweets);
 
 document.addEventListener('click', function(e){
     if(e.target.id === 'tweet-btn'){
         handleTweetBtnClick();
         updateLocalStorage();
+    }
+    else if (e.target.id === 'darkModeBtn'){
+        handleDarkModeBtnClick();
     }
     else if(e.target.dataset.like){
         handleLikeClick(e.target.dataset.like);
@@ -61,12 +64,9 @@ function addToLocalStorage(tweet){
     localStorage.setItem("myTweets", JSON.stringify(myTweets));
 }
 
-function handleDeleteBtnClick(tweetId){
-    const targetTweetObj = myTweets.filter(function(tweet){
-        return tweet.uuid === tweetId;
-    })[0];
-
-    
+function handleDarkModeBtnClick(){
+    document.body.classList.toggle("dark-theme");
+    render();
 }
 
 function handleTweetBtnClick(){
@@ -74,8 +74,8 @@ function handleTweetBtnClick(){
     if(tweetInput.value){
         const tweetObject = 
         {
-            handle: `@Scrimba`,
-            profilePic: `images/scrimbalogo.png`,
+            handle: `me`,
+            profilePic: `images/memoji-happy.jpg`,
             likes: 0,
             retweets: 0,
             tweetText: tweetInput.value,
@@ -151,6 +151,18 @@ function handleAnswerBtnClick(answerId){
     commentInput.value = '';
 }
 
+function handleDeleteBtnClick(tweetId){
+    let targetTweetObj = myTweets.filter(function(tweet){
+        return tweet.uuid === tweetId;
+    })[0];
+    for (let i = 0; i < myTweets.length; i++){
+        if (myTweets[i] === targetTweetObj){
+            myTweets.splice(i, 1);
+        }
+    }
+    render();
+}
+
 function getFeedHtml(){
     let feedHtml = ``;
     myTweets.forEach(function(tweet){
@@ -177,9 +189,9 @@ function getFeedHtml(){
             repliesHtml =`
 <div id="comment-field-${tweet.uuid}" class="tweet-comment hidden">
 <div class="tweet-inner">
-    <img src="images/scrimbalogo.png" class="profile-pic">
+    <img src="images/memoji-happy.jpg" class="profile-pic">
         <div>
-            <p class="handle">@Scrimba</p>
+            <p class="handle">me</p>
             <textarea id="reply-textarea-${tweet.uuid}" class="reply-textarea" placeholder="What's happening?"></textarea>
             <button id="answer-btn" data-answer="${tweet.uuid}">Answer</button>
         </div>
