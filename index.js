@@ -142,8 +142,8 @@ function handleAnswerBtnClick(answerId){
         })[0];
 
         targetTweetObj.replies.unshift({
-            handle: `@Scrimba`,
-            profilePic: `images/scrimbalogo.png`,
+            handle: `me`,
+            profilePic: `images/memoji-happy.jpg`,
             tweetText: `${commentInput.value}`,
         });
     }
