@@ -47,6 +47,19 @@ header{
 
 .side-panel{
     position: absolute;
+    right: 1px;
+    left: 0;
+    width: 11em;
+    color: var(--bkg-color);
+    background-color: var(--text-color);
+    border-radius: 0 3em 3em 0;
+}
+
+@media (max-width: 700px){
+    .side-panel {
+        position: static;
+        margin-bottom: 2em;
+    }
 }
 
 .panel-item{
