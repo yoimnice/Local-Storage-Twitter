@@ -197,7 +197,25 @@ border-radius: 50%;
 
 .tweet-detail{
     display: flex;
+    align-items: center;
+    font-size: 1.2em;
+    display: flex;
     gap: 4px;
+}
+
+.tweet-detail i{
+    margin: 0 .2em;
+    font-size: 2em;
+}
+
+@media (min-width: 800px){
+    .tweet-detail{
+        font-size: 1em;
+    }
+    .tweet-detail i{
+        margin: 0 0;
+        font-size: 1rem;
+    }
 }
 
 .tweet-reply,
